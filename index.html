@@ -808,26 +808,28 @@ function submitZip() {
   }
   state.zip = zip;
   showOnly('s0-loading');
-  document.getElementById('zl-status').textContent = 'Locating contractors near ' + zip + '...';
 
-  const checks = ['zc-1','zc-2','zc-3'];
+  const steps = [
+    { bar: 30,  status: 'Checking contractor availability...', check: 'zc-1' },
+    { bar: 65,  status: 'Verifying Maryland licenses...',      check: 'zc-2' },
+    { bar: 90,  status: 'Confirming service area...',          check: 'zc-3' },
+    { bar: 100, status: zip + ' is covered.',                  check: null   },
+  ];
+
   let i = 0;
-  const barSteps = [30, 65, 90, 100];
-
   function run() {
-    document.getElementById('zl-bar').style.width = barSteps[i] + '%';
-    if (i < checks.length) {
-      setTimeout(() => {
-        document.getElementById(checks[i]).classList.add('visible');
-        if (i === 1) document.getElementById('zl-status').textContent = 'Verifying contractor credentials...';
-        if (i === 2) document.getElementById('zl-status').textContent = zip + ' is covered.';
-        i++;
-        if (i <= checks.length) setTimeout(run, 850);
-        else setTimeout(() => goStep(1), 600);
-      }, i === 0 ? 300 : 850);
+    if (i >= steps.length) {
+      setTimeout(() => goStep(1), 700);
+      return;
     }
+    const s = steps[i];
+    document.getElementById('zl-bar').style.width = s.bar + '%';
+    document.getElementById('zl-status').textContent = s.status;
+    if (s.check) document.getElementById(s.check).classList.add('visible');
+    i++;
+    setTimeout(run, i === steps.length ? 500 : 900);
   }
-  run();
+  setTimeout(run, 300);
 }
 
 function pick(el) {
@@ -872,26 +874,25 @@ function submitLead() {
   document.getElementById('ec-1-text').textContent = 'Pulling contractor availability near ' + (state.zip || 'your area');
   document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabel[state.scope]||'remodel') + ' costs in your zip';
 
-  const seq = [
-    {bar:18, status:'Searching contractor network...', checks:[]},
-    {bar:36, status:'Checking licenses and recent reviews...', checks:['ec-1']},
-    {bar:54, status:'Matching your ' + (sizeLabel[state.size]||'bathroom') + '...', checks:['ec-2']},
-    {bar:76, status:'Reviewing project specifications...', checks:['ec-3']},
-    {bar:92, status:'Calculating your estimate range...', checks:['ec-4']},
-    {bar:100, status:'Done.', checks:[]},
+  const steps = [
+    { bar: 20,  status: 'Checking contractor availability...',       check: 'ec-1' },
+    { bar: 45,  status: 'Verifying Maryland licenses...',            check: 'ec-2' },
+    { bar: 70,  status: 'Matching your project specifications...',   check: 'ec-3' },
+    { bar: 90,  status: 'Calculating your estimate range...',        check: 'ec-4' },
+    { bar: 100, status: 'Done.',                                     check: null   },
   ];
 
   let i = 0;
   function run() {
-    if (i >= seq.length) { setTimeout(showResult, 450); return; }
-    const s = seq[i];
+    if (i >= steps.length) { setTimeout(showResult, 500); return; }
+    const s = steps[i];
     document.getElementById('el-bar').style.width = s.bar + '%';
     document.getElementById('el-status').textContent = s.status;
-    s.checks.forEach(id => document.getElementById(id).classList.add('visible'));
+    if (s.check) document.getElementById(s.check).classList.add('visible');
     i++;
-    setTimeout(run, i === seq.length ? 300 : 820);
+    setTimeout(run, i === steps.length ? 400 : 900);
   }
-  setTimeout(run, 250);
+  setTimeout(run, 300);
 }
 
 function showResult() {
