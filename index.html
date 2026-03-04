@@ -806,16 +806,18 @@ function submitZip() {
   showOnly('s0-loading');
 
   const checks = ['zc-1','zc-2','zc-3'];
-  const bars   = [33, 66, 100];
+  const bars   = [28, 61, 100];
+  const delays = [1100, 1800, 900]; // stalls on license check
   let i = 0;
   function run() {
-    if (i >= checks.length) { setTimeout(() => goStep(1), 700); return; }
+    if (i >= checks.length) { setTimeout(() => goStep(1), 600); return; }
     document.getElementById('zl-bar').style.width = bars[i] + '%';
     document.getElementById(checks[i]).classList.add('visible');
+    const d = delays[i];
     i++;
-    setTimeout(run, i === checks.length ? 500 : 950);
+    setTimeout(run, d);
   }
-  setTimeout(run, 400);
+  setTimeout(run, 300);
 }
 
 function pick(el) {
@@ -861,16 +863,18 @@ function submitLead() {
   document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabel[state.scope]||'remodel') + ' costs in your zip';
 
   const checks = ['ec-1','ec-2','ec-3','ec-4'];
-  const bars   = [25, 50, 75, 100];
+  const bars   = [22, 47, 79, 100];
+  const delays = [900, 2100, 1100, 700]; // slow on matching, quick at end
   let i = 0;
   function run() {
-    if (i >= checks.length) { setTimeout(showResult, 600); return; }
+    if (i >= checks.length) { setTimeout(showResult, 500); return; }
     document.getElementById('el-bar').style.width = bars[i] + '%';
     document.getElementById(checks[i]).classList.add('visible');
+    const d = delays[i];
     i++;
-    setTimeout(run, i === checks.length ? 400 : 950);
+    setTimeout(run, d);
   }
-  setTimeout(run, 400);
+  setTimeout(run, 350);
 }
 
 function showResult() {
