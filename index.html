@@ -501,6 +501,68 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     .modal-card { border-radius: 16px; max-width: 420px; }
   }
 
+
+  .value-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 18px;
+    border: 1.5px solid #dde4ec;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .stack-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid #edf1f5;
+  }
+
+  .stack-row:last-child { border-bottom: none; }
+
+  .stack-icon {
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    background: #f0fbfa;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stack-icon svg {
+    width: 14px; height: 14px;
+    stroke: #1fb8a8; stroke-width: 2; fill: none;
+  }
+
+  .stack-text { flex: 1; }
+
+  .stack-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a2e44;
+    line-height: 1.3;
+  }
+
+  .stack-sub {
+    font-size: 11px;
+    color: #8a9eb2;
+    margin-top: 1px;
+    font-weight: 400;
+  }
+
+  .stack-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1fb8a8;
+    background: #f0fbfa;
+    border: 1px solid rgba(31,184,168,0.2);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
 </style>
 </head>
 <body>
@@ -768,15 +830,48 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
       <div class="result-subline">Your number. Now let's make it go further.</div>
     </div>
     <div class="result-body">
-      <p class="result-nudge">Book through BathPal and your contractor brings a <strong>free $1,000 tile upgrade</strong> to the table. That's not something you get calling around on your own.</p>
+      <div class="value-stack">
+        <div class="stack-row">
+          <div class="stack-icon"><svg viewBox="0 0 14 14"><rect x="2" y="4" width="10" height="8" rx="1"/><polyline points="5,4 5,2.5 9,2.5 9,4"/></svg></div>
+          <div class="stack-text">
+            <div class="stack-title">Free $1,000 tile upgrade</div>
+            <div class="stack-sub">Applied to your project automatically</div>
+          </div>
+          <div class="stack-badge">Included</div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-icon"><svg viewBox="0 0 14 14"><path d="M7 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm-4 9s.5-2.5 4-2.5 4 2.5 4 2.5"/></svg></div>
+          <div class="stack-text">
+            <div class="stack-title">Contractor already knows your project</div>
+            <div class="stack-sub">Your answers go with them — no repeating yourself</div>
+          </div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-icon"><svg viewBox="0 0 14 14"><polyline points="2,7 5,10 12,3"/></svg></div>
+          <div class="stack-text">
+            <div class="stack-title">Pre-screened &amp; background checked</div>
+            <div class="stack-sub">Maryland licensed, verified before they ever step foot in your home</div>
+          </div>
+        </div>
+        <div class="stack-row">
+          <div class="stack-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="5"/><polyline points="7,4 7,7 9,9"/></svg></div>
+          <div class="stack-text">
+            <div class="stack-title">They reach out within 30 minutes</div>
+            <div class="stack-sub">No waiting days for a callback</div>
+          </div>
+        </div>
+      </div>
+
       <button class="cta-btn" onclick="openBooking()">
         Claim My $1,000 Tile Upgrade
         <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
       </button>
+
       <div class="scarcity-row">
         <div class="scarcity-dot"></div>
         <div class="scarcity-text">Only 4 upgrades left for <span id="result-zip2"></span> this month</div>
       </div>
+
       <button class="recalc-btn" onclick="reset()">Start over</button>
     </div>
   </div>
