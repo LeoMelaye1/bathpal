@@ -715,13 +715,14 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
 const state = { zip:null, own:null, size:null, scope:null, finish:null, timeline:null, quotes:null };
 
 const baseC = {
-  small:    {low:7000,  high:13000},
-  standard: {low:11000, high:22000},
-  master:   {low:18000, high:36000},
-  large:    {low:28000, high:55000}
+  small:    {low:14000, high:20000},
+  standard: {low:16000, high:26000},
+  master:   {low:20000, high:32000},
+  large:    {low:26000, high:40000}
 };
-const scopeM  = {cosmetic:0.45, partial:0.70, full:1.0};
-const finishM = {budget:0.75, mid:1.0, upscale:1.4, luxury:1.85};
+// Multipliers kept tight so output never escapes $14k-$40k range
+const scopeM  = {cosmetic:0.75, partial:0.88, full:1.0};
+const finishM = {budget:0.85, mid:1.0, upscale:1.1, luxury:1.2};
 
 const feedback = {
   1: ['Got it.'],
@@ -911,18 +912,12 @@ function showResult() {
   const b  = baseC[state.size];
   const sm = scopeM[state.scope];
   const fm = finishM[state.finish];
-  const lo = Math.round(b.low  * sm * fm / 500) * 500;
-  const hi = Math.round(b.high * sm * fm / 500) * 500;
+  const lo = Math.min(40000, Math.max(14000, Math.round(b.low  * sm * fm / 500) * 500));
+  const hi = Math.min(40000, Math.max(14000, Math.round(b.high * sm * fm / 500) * 500));
   const fmt = n => '$' + n.toLocaleString();
   document.getElementById('result-range').textContent = fmt(lo) + ' – ' + fmt(hi);
-
-  const timelineNote = state.timeline === 'asap'
-    ? 'We’ve prioritized contractors available immediately.'
-    : state.timeline === '1-3mo'
-    ? 'Based on your timeline, we’ve matched contractors available within the month.'
-    : 'Based on your project details · Maryland 2026';
-  document.getElementById('result-context').textContent = timelineNote;
-
+  const rzip = document.getElementById('result-zip');
+  if (rzip) rzip.textContent = state.zip || 'your area';
   showOnly('s-result');
 }
 
