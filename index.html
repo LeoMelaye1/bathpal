@@ -293,20 +293,18 @@ body {
 
 .result-body { padding: 22px; }
 
-.result-note {
-  background: #f8fafc;
-  border: 1px solid #dde4ec;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 14px;
+.result-nudge {
+  font-size: 14px;
+  color: #5a7080;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  font-weight: 400;
 }
-.result-note-title { font-size: 13px; font-weight: 700; color: #1a2e44; margin-bottom: 4px; }
-.result-note-text { font-size: 12px; color: #8a9eb2; line-height: 1.6; }
 
 .scarcity-row {
   display: flex; align-items: center; gap: 10px;
   background: #fff8f5; border: 1px solid rgba(224,82,82,0.18);
-  border-radius: 8px; padding: 11px 14px; margin-bottom: 14px;
+  border-radius: 8px; padding: 10px 14px; margin: 12px 0;
 }
 .scarcity-dot {
   width: 7px; height: 7px; background: #e05252;
@@ -316,22 +314,7 @@ body {
 @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.25; } }
 .scarcity-text { font-size: 12px; font-weight: 600; color: #c04040; }
 
-.cta-box {
-  background: #1a2e44;
-  border-radius: 10px;
-  padding: 20px 18px;
-  margin-bottom: 14px;
-}
-.cta-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
-.cta-sub { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5; margin-bottom: 14px; }
-.cta-detail {
-  display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px;
-}
-.cta-row {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; color: rgba(255,255,255,0.7);
-}
-.cta-row svg { width: 13px; height: 13px; stroke: #1fb8a8; stroke-width: 2; fill: none; flex-shrink: 0; }
+
 .cta-btn {
   width: 100%;
   background: #1fb8a8;
@@ -466,9 +449,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-1" disabled onclick="nextFromOwnership()">
-        Continue <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
     </div>
 
     <!-- DISQUALIFIED: RENTER -->
@@ -505,9 +486,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-2" disabled onclick="goStep(3)">
-        Next <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
       <button class="btn-back" onclick="goStep(1)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
@@ -531,9 +510,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-3" disabled onclick="goStep(4)">
-        Next <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
       <button class="btn-back" onclick="goStep(2)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
@@ -561,9 +538,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-4" disabled onclick="goStep(5)">
-        Next <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
       <button class="btn-back" onclick="goStep(3)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
@@ -591,9 +566,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-5" disabled onclick="nextFromTimeline()">
-        Next <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
       <button class="btn-back" onclick="goStep(4)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
@@ -627,9 +600,7 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
           <div class="opt-check"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
         </div>
       </div>
-      <button class="btn-primary" id="next-6" disabled onclick="goStep(7)">
-        Continue <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-      </button>
+      
       <button class="btn-back" onclick="goStep(5)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
@@ -674,34 +645,24 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     <div class="result-header">
       <div class="result-label">Your Estimate</div>
       <div class="result-range" id="result-range">—</div>
-      <div class="result-context" id="result-context">Based on your project details &middot; Maryland 2026</div>
+      <div class="result-context">This is your ballpark. Your real quote is usually lower.</div>
     </div>
     <div class="result-body">
 
-      <div class="result-note">
-        <div class="result-note-title">This is a starting point, not a final number.</div>
-        <div class="result-note-text">Estimates can shift based on what&rsquo;s behind your walls, local permit costs, and the specific materials you choose. A free in-home visit gives you an accurate quote — and usually comes in lower than what people expect.</div>
+      <div class="result-nudge">
+        We&rsquo;ve matched you with a contractor near <span id="result-zip"></span>. They can give you an exact number in person &mdash; free.
       </div>
+
+      <button class="cta-btn" onclick="">
+        Book My Free Estimate <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
+      </button>
 
       <div class="scarcity-row">
         <div class="scarcity-dot"></div>
-        <div class="scarcity-text">Only 4 free tile upgrades left in your area this month</div>
+        <div class="scarcity-text">4 free tile upgrades left in your area this month</div>
       </div>
 
-      <div class="cta-box">
-        <div class="cta-title">Get a more accurate number — for free</div>
-        <div class="cta-sub">We&rsquo;ve already matched you with a contractor. They&rsquo;ll come to your home, walk through the project, and give you a real quote you can actually build a budget around.</div>
-        <div class="cta-detail">
-          <div class="cta-row"><svg viewBox="0 0 14 14"><polyline points="2,7 5,10 12,3"/></svg> Free in-home estimate — no commitment</div>
-          <div class="cta-row"><svg viewBox="0 0 14 14"><polyline points="2,7 5,10 12,3"/></svg> Free $1,000 tile upgrade included</div>
-          <div class="cta-row"><svg viewBox="0 0 14 14"><polyline points="2,7 5,10 12,3"/></svg> Contractor reaches out within 30 minutes</div>
-        </div>
-        <button class="cta-btn" onclick="">
-          Book My Free Estimate <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
-        </button>
-      </div>
-
-      <button class="recalc-btn" onclick="reset()">Start over with different answers</button>
+      <button class="recalc-btn" onclick="reset()">Start over</button>
     </div>
   </div>
 
@@ -859,11 +820,8 @@ function pick(el) {
   document.querySelectorAll(`.opt[data-step="${s}"]`).forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
 
-  const nextMap = {1:'next-1', 2:'next-2', 3:'next-3', 4:'next-4', 5:'next-5', 6:'next-6'};
   const stateMap = {2:'size', 3:'scope', 4:'finish', 5:'timeline', 6:'quotes'};
-
-  if (nextMap[s]) document.getElementById(nextMap[s]).disabled = false;
-  if (s === '1') { state.own = el.dataset.val; document.getElementById('next-1').disabled = false; }
+  if (s === '1') state.own = el.dataset.val;
   if (stateMap[s]) state[stateMap[s]] = el.dataset.val;
 
   const fb = document.getElementById('fb-' + s);
@@ -872,6 +830,14 @@ function pick(el) {
     fb.textContent = msgs[Math.floor(Math.random() * msgs.length)];
     fb.classList.add('show');
   }
+
+  // Auto-advance after brief pause so selection is visible
+  setTimeout(() => {
+    if (s === '1') { nextFromOwnership(); return; }
+    if (s === '5') { nextFromTimeline(); return; }
+    const next = parseInt(s) + 1;
+    goStep(next);
+  }, 420);
 }
 
 function nextFromOwnership() {
