@@ -765,17 +765,17 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     <div class="result-header">
       <div class="result-label">Your Estimate</div>
       <div class="result-range" id="result-range">—</div>
-      <div class="result-subline">Most homeowners pay less once a contractor sees it in person.</div>
+      <div class="result-subline">Your number. Now let's make it go further.</div>
     </div>
     <div class="result-body">
-      <p class="result-nudge">We found a licensed contractor near <strong id="result-zip"></strong> who fits your project. They&rsquo;ll come to you, walk through everything, and give you a real number — at no cost to you.</p>
+      <p class="result-nudge">Book through BathPal and your contractor brings a <strong>free $1,000 tile upgrade</strong> to the table. That's not something you get calling around on your own.</p>
       <button class="cta-btn" onclick="openBooking()">
-        Schedule My Free Estimate
+        Claim My $1,000 Tile Upgrade
         <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
       </button>
       <div class="scarcity-row">
         <div class="scarcity-dot"></div>
-        <div class="scarcity-text">4 free $1,000 tile upgrades remaining in your area</div>
+        <div class="scarcity-text">Only 4 upgrades left for <span id="result-zip2"></span> this month</div>
       </div>
       <button class="recalc-btn" onclick="reset()">Start over</button>
     </div>
@@ -1076,8 +1076,7 @@ function showResult() {
   const hi = Math.min(40000, Math.max(lo + 4000, rawHi));
   const fmt = n => '$' + n.toLocaleString();
   document.getElementById('result-range').textContent = fmt(lo) + ' – ' + fmt(hi);
-  const rzip = document.getElementById('result-zip');
-  if (rzip) rzip.textContent = state.zip || 'your area';
+  ['result-zip','result-zip2'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = state.zip || 'your area'; });
   showOnly('s-result');
 }
 
