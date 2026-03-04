@@ -438,8 +438,6 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     <div class="step" id="s0-loading">
       <div class="loading-wrap">
         <div class="loading-label">Checking your area</div>
-        <div class="loading-status" id="zl-status">Locating contractors near you...</div>
-        <div class="loading-sub" id="zl-sub"></div>
         <div class="loading-bar-track"><div class="loading-bar-fill" id="zl-bar"></div></div>
         <div class="loading-detail">
           <div class="loading-check-row" id="zc-1"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg> Checking contractor availability</div>
@@ -660,8 +658,6 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     <div class="step" id="s7-loading">
       <div class="loading-wrap">
         <div class="loading-label">Building your estimate</div>
-        <div class="loading-status" id="el-status">Searching contractor network...</div>
-        <div class="loading-sub" id="el-sub"></div>
         <div class="loading-bar-track"><div class="loading-bar-fill" id="el-bar"></div></div>
         <div class="loading-detail">
           <div class="loading-check-row" id="ec-1"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg> <span id="ec-1-text">Pulling contractor availability near your zip</span></div>
@@ -809,27 +805,17 @@ function submitZip() {
   state.zip = zip;
   showOnly('s0-loading');
 
-  const steps = [
-    { bar: 30,  status: 'Checking contractor availability...', check: 'zc-1' },
-    { bar: 65,  status: 'Verifying Maryland licenses...',      check: 'zc-2' },
-    { bar: 90,  status: 'Confirming service area...',          check: 'zc-3' },
-    { bar: 100, status: zip + ' is covered.',                  check: null   },
-  ];
-
+  const checks = ['zc-1','zc-2','zc-3'];
+  const bars   = [33, 66, 100];
   let i = 0;
   function run() {
-    if (i >= steps.length) {
-      setTimeout(() => goStep(1), 700);
-      return;
-    }
-    const s = steps[i];
-    document.getElementById('zl-bar').style.width = s.bar + '%';
-    document.getElementById('zl-status').textContent = s.status;
-    if (s.check) document.getElementById(s.check).classList.add('visible');
+    if (i >= checks.length) { setTimeout(() => goStep(1), 700); return; }
+    document.getElementById('zl-bar').style.width = bars[i] + '%';
+    document.getElementById(checks[i]).classList.add('visible');
     i++;
-    setTimeout(run, i === steps.length ? 500 : 900);
+    setTimeout(run, i === checks.length ? 500 : 950);
   }
-  setTimeout(run, 300);
+  setTimeout(run, 400);
 }
 
 function pick(el) {
@@ -874,25 +860,17 @@ function submitLead() {
   document.getElementById('ec-1-text').textContent = 'Pulling contractor availability near ' + (state.zip || 'your area');
   document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabel[state.scope]||'remodel') + ' costs in your zip';
 
-  const steps = [
-    { bar: 20,  status: 'Checking contractor availability...',       check: 'ec-1' },
-    { bar: 45,  status: 'Verifying Maryland licenses...',            check: 'ec-2' },
-    { bar: 70,  status: 'Matching your project specifications...',   check: 'ec-3' },
-    { bar: 90,  status: 'Calculating your estimate range...',        check: 'ec-4' },
-    { bar: 100, status: 'Done.',                                     check: null   },
-  ];
-
+  const checks = ['ec-1','ec-2','ec-3','ec-4'];
+  const bars   = [25, 50, 75, 100];
   let i = 0;
   function run() {
-    if (i >= steps.length) { setTimeout(showResult, 500); return; }
-    const s = steps[i];
-    document.getElementById('el-bar').style.width = s.bar + '%';
-    document.getElementById('el-status').textContent = s.status;
-    if (s.check) document.getElementById(s.check).classList.add('visible');
+    if (i >= checks.length) { setTimeout(showResult, 600); return; }
+    document.getElementById('el-bar').style.width = bars[i] + '%';
+    document.getElementById(checks[i]).classList.add('visible');
     i++;
-    setTimeout(run, i === steps.length ? 400 : 900);
+    setTimeout(run, i === checks.length ? 400 : 950);
   }
-  setTimeout(run, 300);
+  setTimeout(run, 400);
 }
 
 function showResult() {
