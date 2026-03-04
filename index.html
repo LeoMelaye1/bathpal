@@ -381,6 +381,126 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
   .result-body { padding: 24px 28px; }
   .trust-bar-inner { grid-template-columns: repeat(4,1fr); }
 }
+
+  .result-subline {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+  }
+
+  .result-nudge {
+    font-size: 14px;
+    color: #5a7080;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  .result-nudge strong { color: #1a2e44; font-weight: 600; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,20,35,0.55);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal-card {
+    background: white;
+    border-radius: 16px 16px 0 0;
+    width: 100%;
+    max-width: 480px;
+    padding: 28px 22px 36px;
+    position: relative;
+    animation: slideUp 0.28s cubic-bezier(0.32,0.72,0,1);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: #f0f4f8;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  .modal-close svg {
+    width: 11px; height: 11px;
+    stroke: #8a9eb2; stroke-width: 2; fill: none;
+  }
+
+  .modal-inner { }
+  .modal-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: #1fb8a8; margin-bottom: 6px; }
+  .modal-title { font-size: 20px; font-weight: 700; color: #1a2e44; margin-bottom: 4px; letter-spacing: -0.3px; }
+  .modal-sub { font-size: 13px; color: #8a9eb2; margin-bottom: 20px; }
+
+  .time-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .time-slot {
+    border: 1.5px solid #dde4ec;
+    border-radius: 8px;
+    padding: 11px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a2e44;
+    cursor: pointer;
+    text-align: center;
+    background: #f8fafc;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .time-slot:active { transform: scale(0.98); }
+  .time-slot.selected { border-color: #1fb8a8; background: #f0fbfa; color: #1a2e44; }
+
+  .time-slot-sub {
+    font-size: 11px;
+    font-weight: 400;
+    color: #8a9eb2;
+    margin-top: 2px;
+  }
+
+  .time-slot.selected .time-slot-sub { color: #4a9e94; }
+
+  /* Confirm check */
+  .confirm-check {
+    width: 52px; height: 52px;
+    background: #f0fbfa;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .confirm-check svg {
+    width: 24px; height: 24px;
+    stroke: #1fb8a8; stroke-width: 2.5; fill: none;
+  }
+
+  @media (min-width: 540px) {
+    .modal-overlay { align-items: center; }
+    .modal-card { border-radius: 16px; max-width: 420px; }
+  }
+
 </style>
 </head>
 <body>
@@ -645,24 +765,55 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
     <div class="result-header">
       <div class="result-label">Your Estimate</div>
       <div class="result-range" id="result-range">—</div>
-      <div class="result-context">This is your ballpark. Your real quote is usually lower.</div>
+      <div class="result-subline">Most homeowners pay less once a contractor sees it in person.</div>
     </div>
     <div class="result-body">
-
-      <div class="result-nudge">
-        We&rsquo;ve matched you with a contractor near <span id="result-zip"></span>. They can give you an exact number in person &mdash; free.
-      </div>
-
-      <button class="cta-btn" onclick="">
-        Book My Free Estimate <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
+      <p class="result-nudge">We found a licensed contractor near <strong id="result-zip"></strong> who fits your project. They&rsquo;ll come to you, walk through everything, and give you a real number — at no cost to you.</p>
+      <button class="cta-btn" onclick="openBooking()">
+        Schedule My Free Estimate
+        <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
       </button>
-
       <div class="scarcity-row">
         <div class="scarcity-dot"></div>
-        <div class="scarcity-text">4 free tile upgrades left in your area this month</div>
+        <div class="scarcity-text">4 free $1,000 tile upgrades remaining in your area</div>
+      </div>
+      <button class="recalc-btn" onclick="reset()">Start over</button>
+    </div>
+  </div>
+
+  <!-- BOOKING MODAL -->
+  <div class="modal-overlay" id="modal" onclick="closeBookingOutside(event)">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeBooking()">
+        <svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+      </button>
+
+      <div class="modal-inner" id="modal-form-view">
+        <div class="modal-label">Almost done</div>
+        <div class="modal-title">When works best for you?</div>
+        <div class="modal-sub">Your contractor will confirm within 30 minutes.</div>
+
+        <div class="time-slots" id="time-slots"></div>
+
+        <div class="form-field" style="margin-bottom:10px;">
+          <div class="form-label">Any notes for the contractor?</div>
+          <textarea class="form-input" id="notes" rows="2" placeholder="e.g. we want to keep the existing layout" style="resize:none;font-size:14px;line-height:1.5;"></textarea>
+        </div>
+
+        <button class="cta-btn" onclick="submitBooking()" id="book-btn">
+          Confirm My Estimate
+          <svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12"/></svg>
+        </button>
+        <div class="form-disclaimer" style="margin-top:10px;">BathPal is free for homeowners. Contractors pay us — not you.</div>
       </div>
 
-      <button class="recalc-btn" onclick="reset()">Start over</button>
+      <div class="modal-inner" id="modal-confirm-view" style="display:none;text-align:center;padding:32px 0 16px;">
+        <div class="confirm-check">
+          <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,7"/></svg>
+        </div>
+        <div class="modal-title" style="margin-bottom:8px;">You&rsquo;re all set.</div>
+        <div class="modal-sub" style="margin-bottom:0;">Your contractor will reach out within 30 minutes to confirm. Keep your phone nearby.</div>
+      </div>
     </div>
   </div>
 
@@ -938,6 +1089,65 @@ function reset() {
   document.getElementById('zip-err').textContent = '';
   showOnly('s0');
 }
+
+function buildSlots() {
+  const now = new Date();
+  const slots = [];
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Generate 4 upcoming slots across next few days
+  const times = ['8:00 – 10:00 AM', '10:00 AM – 12:00 PM', '12:00 – 2:00 PM', '2:00 – 4:00 PM', '4:00 – 6:00 PM'];
+  let added = 0;
+  let d = new Date(now);
+  d.setHours(0,0,0,0);
+
+  while (added < 4) {
+    d.setDate(d.getDate() + (added === 0 ? 0 : 1));
+    const dayName = added === 0 ? 'Today' : added === 1 ? 'Tomorrow' : days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate();
+    // Pick a time slot based on current hour to seem realistic
+    const timeIdx = Math.min(times.length - 1, Math.floor(added * 1.2 + (now.getHours() > 14 ? 1 : 0)));
+    slots.push({ label: dayName, time: times[timeIdx] });
+    added++;
+  }
+
+  const container = document.getElementById('time-slots');
+  container.innerHTML = '';
+  slots.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'time-slot' + (i === 0 ? ' selected' : '');
+    el.dataset.idx = i;
+    el.innerHTML = '<div>' + s.label + '</div><div class="time-slot-sub">' + s.time + '</div>';
+    el.onclick = () => {
+      document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+      el.classList.add('selected');
+    };
+    container.appendChild(el);
+  });
+}
+
+function openBooking() {
+  buildSlots();
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBooking() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeBookingOutside(e) {
+  if (e.target === document.getElementById('modal')) closeBooking();
+}
+
+function submitBooking() {
+  document.getElementById('modal-form-view').style.display = 'none';
+  document.getElementById('modal-confirm-view').style.display = 'block';
+  // Auto close after a moment
+  setTimeout(closeBooking, 3200);
+}
+
 </script>
 </body>
 </html>
