@@ -242,7 +242,6 @@ body {
 .loading-bar-fill {
   height: 100%; background: #1fb8a8;
   border-radius: 100px; width: 0%;
-  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
 }
 
 .loading-detail {
@@ -805,19 +804,54 @@ function submitZip() {
   state.zip = zip;
   showOnly('s0-loading');
 
+  // Continuous crawling progress bar
+  const zlBar = document.getElementById('zl-bar');
+  let pct = 0;
+  let checksDone = 0;
+  const checkTriggers = [30, 62, 88]; // % at which each row appears
   const checks = ['zc-1','zc-2','zc-3'];
-  const bars   = [28, 61, 100];
-  const delays = [1100, 1800, 900]; // stalls on license check
-  let i = 0;
-  function run() {
-    if (i >= checks.length) { setTimeout(() => goStep(1), 600); return; }
-    document.getElementById('zl-bar').style.width = bars[i] + '%';
-    document.getElementById(checks[i]).classList.add('visible');
-    const d = delays[i];
-    i++;
-    setTimeout(run, d);
+
+  // Remove instant CSS transition, use JS-driven micro steps
+  zlBar.style.transition = 'none';
+
+  // Speed profile: fast start, slows mid, crawls near end, snaps to 100
+  function getSpeed(p) {
+    if (p < 20) return 1.8;   // quick early
+    if (p < 45) return 0.7;   // slows down
+    if (p < 65) return 1.1;   // picks back up
+    if (p < 85) return 0.4;   // crawls — feels like real work
+    if (p < 95) return 0.6;
+    return 0;                  // hold — snap at end
   }
-  setTimeout(run, 300);
+
+  function tick() {
+    if (pct >= 95) {
+      // small pause then snap to 100 and proceed
+      setTimeout(() => {
+        pct = 100;
+        zlBar.style.width = '100%';
+        if (checks[checksDone]) document.getElementById(checks[checksDone]).classList.add('visible');
+        setTimeout(() => goStep(1), 700);
+      }, 600);
+      return;
+    }
+
+    const speed = getSpeed(pct);
+    const jitter = (Math.random() - 0.3) * 0.4; // slight randomness
+    pct = Math.min(95, pct + speed + jitter);
+    zlBar.style.width = pct + '%';
+
+    // Reveal checklist rows at trigger points
+    while (checksDone < checkTriggers.length && pct >= checkTriggers[checksDone]) {
+      document.getElementById(checks[checksDone]).classList.add('visible');
+      checksDone++;
+    }
+
+    const interval = 40 + Math.random() * 30; // 40-70ms ticks
+    setTimeout(tick, interval);
+  }
+
+  setTimeout(tick, 300);
 }
 
 function pick(el) {
@@ -862,19 +896,49 @@ function submitLead() {
   document.getElementById('ec-1-text').textContent = 'Pulling contractor availability near ' + (state.zip || 'your area');
   document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabel[state.scope]||'remodel') + ' costs in your zip';
 
+  const elBar = document.getElementById('el-bar');
+  let pct = 0;
+  let checksDone = 0;
+  const checkTriggers = [22, 48, 71, 91];
   const checks = ['ec-1','ec-2','ec-3','ec-4'];
-  const bars   = [22, 47, 79, 100];
-  const delays = [900, 2100, 1100, 700]; // slow on matching, quick at end
-  let i = 0;
-  function run() {
-    if (i >= checks.length) { setTimeout(showResult, 500); return; }
-    document.getElementById('el-bar').style.width = bars[i] + '%';
-    document.getElementById(checks[i]).classList.add('visible');
-    const d = delays[i];
-    i++;
-    setTimeout(run, d);
+
+  elBar.style.transition = 'none';
+
+  function getSpeed(p) {
+    if (p < 15) return 2.0;   // fast start
+    if (p < 35) return 0.8;   // settling
+    if (p < 55) return 0.5;   // slows — feels like matching is hard
+    if (p < 70) return 0.9;   // picks up
+    if (p < 87) return 0.35;  // crawls near the end
+    if (p < 94) return 0.55;
+    return 0;
   }
-  setTimeout(run, 350);
+
+  function tick() {
+    if (pct >= 94) {
+      setTimeout(() => {
+        pct = 100;
+        elBar.style.width = '100%';
+        if (checks[checksDone]) document.getElementById(checks[checksDone]).classList.add('visible');
+        setTimeout(showResult, 650);
+      }, 700);
+      return;
+    }
+
+    const speed = getSpeed(pct);
+    const jitter = (Math.random() - 0.3) * 0.35;
+    pct = Math.min(94, pct + speed + jitter);
+    elBar.style.width = pct + '%';
+
+    while (checksDone < checkTriggers.length && pct >= checkTriggers[checksDone]) {
+      document.getElementById(checks[checksDone]).classList.add('visible');
+      checksDone++;
+    }
+
+    setTimeout(tick, 40 + Math.random() * 35);
+  }
+
+  setTimeout(tick, 300);
 }
 
 function showResult() {
