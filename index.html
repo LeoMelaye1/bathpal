@@ -794,6 +794,13 @@ footer img { height: 26px; width: auto; margin-bottom: 8px; opacity: 0.35; filte
         <div class="modal-sub">Your contractor will confirm within 30 minutes.</div>
 
         <div class="time-slots" id="time-slots"></div>
+        <div class="time-slot time-slot-custom" id="slot-custom" onclick="toggleCustomTime(this)" style="grid-column:1/-1;text-align:left;display:flex;align-items:center;gap:10px;margin-top:0;">
+          <svg viewBox="0 0 14 14" style="width:13px;height:13px;stroke:#8a9eb2;stroke-width:1.8;fill:none;flex-shrink:0;"><circle cx="7" cy="7" r="5"/><polyline points="7,4 7,7 9,9"/></svg>
+          <span id="custom-slot-label">A different time works better</span>
+        </div>
+        <div id="custom-time-input" style="display:none;margin-top:-2px;margin-bottom:4px;">
+          <input class="form-input" type="text" id="custom-time-val" placeholder="e.g. Friday after 3pm" style="font-size:14px;">
+        </div>
 
         <div class="form-field" style="margin-bottom:10px;">
           <div class="form-label">Any notes for the contractor?</div>
@@ -1063,8 +1070,10 @@ function showResult() {
   const b  = baseC[state.size];
   const sm = scopeM[state.scope];
   const fm = finishM[state.finish];
-  const lo = Math.min(40000, Math.max(14000, Math.round(b.low  * sm * fm / 500) * 500));
-  const hi = Math.min(40000, Math.max(14000, Math.round(b.high * sm * fm / 500) * 500));
+  const rawLo = Math.round(b.low  * sm * fm / 500) * 500;
+  const rawHi = Math.round(b.high * sm * fm / 500) * 500;
+  const lo = Math.max(14000, rawLo);
+  const hi = Math.min(40000, Math.max(lo + 4000, rawHi));
   const fmt = n => '$' + n.toLocaleString();
   document.getElementById('result-range').textContent = fmt(lo) + ' – ' + fmt(hi);
   const rzip = document.getElementById('result-zip');
@@ -1139,6 +1148,14 @@ function closeBooking() {
 
 function closeBookingOutside(e) {
   if (e.target === document.getElementById('modal')) closeBooking();
+}
+
+function toggleCustomTime(el) {
+  document.querySelectorAll('.time-slot').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  const input = document.getElementById('custom-time-input');
+  input.style.display = 'block';
+  setTimeout(() => document.getElementById('custom-time-val').focus(), 50);
 }
 
 function submitBooking() {
