@@ -1161,6 +1161,7 @@ function submitLead() {
     finish_level: finishLabel[state.finish]|| state.finish || '',
     timeline:     timeLabel[state.timeline]|| state.timeline|| '',
     prior_quotes: quotesLabel[state.quotes]|| state.quotes || '',
+    estimate_range: (state.estimateLo && state.estimateHi) ? ('$' + state.estimateLo.toLocaleString() + ' – $' + state.estimateHi.toLocaleString()) : '',
     source:       'BathPal Calculator',
     page_url:     window.location.href
   });
@@ -1226,6 +1227,8 @@ function showResult() {
   const rawHi = Math.round(b.high * sm * fm / 500) * 500;
   const lo = Math.max(14000, rawLo);
   const hi = Math.min(40000, Math.max(lo + 4000, rawHi));
+  state.estimateLo = lo;
+  state.estimateHi = hi;
   const fmt = n => '$' + n.toLocaleString();
   document.getElementById('result-range').textContent = fmt(lo) + ' – ' + fmt(hi);
   ['result-zip','result-zip2'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = state.zip || 'your area'; });
@@ -1310,6 +1313,34 @@ function toggleCustomTime(el) {
 }
 
 function submitBooking() {
+  // Capture selected time slot
+  const selectedSlot = document.querySelector('.time-slot.selected');
+  let appointmentTime = '';
+  if (selectedSlot) {
+    const dayLabel  = selectedSlot.querySelector('div:first-child')?.textContent || '';
+    const timeLabel = selectedSlot.querySelector('.time-slot-sub')?.textContent || '';
+    appointmentTime = (dayLabel + ' ' + timeLabel).trim();
+  }
+  // Check for custom time input
+  const customVal = document.getElementById('custom-time-val');
+  if (customVal && customVal.value.trim()) {
+    appointmentTime = customVal.value.trim();
+  }
+
+  // Send appointment to GHL
+  const name  = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  sendToGHL({
+    event_type:       'appointment_requested',
+    first_name:       name,
+    phone:            phone,
+    zip_code:         state.zip || '',
+    estimate_range:   (state.estimateLo && state.estimateHi) ? ('$' + state.estimateLo.toLocaleString() + ' – $' + state.estimateHi.toLocaleString()) : '',
+    appointment_time: appointmentTime,
+    source:           'BathPal Calculator',
+    page_url:         window.location.href
+  });
+
   document.getElementById('modal-form-view').style.display = 'none';
   document.getElementById('modal-confirm-view').style.display = 'block';
   // Auto close after a moment
