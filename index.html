@@ -1121,12 +1121,50 @@ function nextFromTimeline() {
   goStep(6);
 }
 
+// ─── GoHighLevel Webhook ─────────────────────────────────────
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL_HERE';
+// ─────────────────────────────────────────────────────────────
+
+async function sendToGHL(data) {
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+  } catch (err) {
+    console.error('GHL webhook error:', err);
+  }
+}
+
 function submitLead() {
   const name  = document.getElementById('fname').value.trim();
   const phone = document.getElementById('phone').value.trim();
   if (!name || !phone) { alert('Please enter your name and phone number.'); return; }
+
   // Fire Meta Pixel Lead event
   if (typeof fbq !== 'undefined') fbq('track', 'Lead');
+
+  // Send to GoHighLevel
+  const sizeLabel  = {small:'Small / Half Bath', standard:'Standard Full Bath', master:'Master Bathroom', large:'Large / Luxury Master'};
+  const scopeLabel = {cosmetic:'Surface updates only', partial:'New tile, new look', full:'Full gut remodel'};
+  const finishLabel= {budget:'Clean and functional', mid:'Mid-range', upscale:'High end', luxury:'Spa-level'};
+  const timeLabel  = {'asap':'As soon as possible', '1-3mo':'Within 1–3 months', '3-6mo':'3–6 months', 'exploring':'Just exploring'};
+  const quotesLabel= {none:'No quotes yet', some:'Talked to 1–2 contractors', several:'Has multiple quotes'};
+
+  sendToGHL({
+    first_name:   name,
+    phone:        phone,
+    zip_code:     state.zip       || '',
+    bathroom_size: sizeLabel[state.size]   || state.size   || '',
+    scope:        scopeLabel[state.scope]  || state.scope  || '',
+    finish_level: finishLabel[state.finish]|| state.finish || '',
+    timeline:     timeLabel[state.timeline]|| state.timeline|| '',
+    prior_quotes: quotesLabel[state.quotes]|| state.quotes || '',
+    source:       'BathPal Calculator',
+    page_url:     window.location.href
+  });
+
   showOnly('s7-loading');
 
   // Personalise loading text with their data
