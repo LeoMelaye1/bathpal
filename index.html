@@ -1168,10 +1168,10 @@ function submitLead() {
   showOnly('s7-loading');
 
   // Personalise loading text with their data
-  const sizeLabel = {small:'small bathroom', standard:'full bathroom', master:'master bathroom', large:'luxury master'};
-  const scopeLabel = {cosmetic:'cosmetic update', partial:'partial remodel', full:'full gut remodel'};
+  const sizeLabelShort = {small:'small bathroom', standard:'full bathroom', master:'master bathroom', large:'luxury master'};
+  const scopeLabelShort = {cosmetic:'cosmetic update', partial:'partial remodel', full:'full gut remodel'};
   document.getElementById('ec-1-text').textContent = 'Pulling contractor availability near ' + (state.zip || 'your area');
-  document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabel[state.scope]||'remodel') + ' costs in your zip';
+  document.getElementById('ec-2-text').textContent = 'Checking recent ' + (scopeLabelShort[state.scope]||'remodel') + ' costs in your zip';
 
   const elBar = document.getElementById('el-bar');
   let pct = 0;
