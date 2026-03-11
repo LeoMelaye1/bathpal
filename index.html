@@ -433,7 +433,38 @@ src="https://www.facebook.com/tr?id=915882994184057&ev=PageView&noscript=1"
       <button class="btn-back" onclick="goStep(4)"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
     </div>
 
-    <!-- RESULT: Estimate shown immediately, lead capture below -->
+    <!-- LEAD CAPTURE: shown after step 5, before revealing estimate -->
+    <div class="step" id="s-lead">
+      <div style="text-align:center; margin-bottom:24px; animation: fadeUp 0.4s ease both;">
+        <div style="font-size:40px; margin-bottom:10px;">📲</div>
+        <div class="step-title" style="margin-bottom:8px;">Almost there!</div>
+        <div class="step-sub">Where should we text your quote?</div>
+      </div>
+
+      <div class="result-cta-box" style="box-shadow:none; border:none; background:transparent; padding:0;">
+        <div class="scarcity-row" style="justify-content:center; margin-bottom:20px;">
+          <div class="scarcity-dot"></div>
+          <div class="scarcity-text">Only 3 contractor spots left this week in Maryland</div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">First Name</div>
+          <input class="form-input" type="text" id="fname" placeholder="First name" autocomplete="given-name">
+        </div>
+        <div class="form-field" style="margin-bottom:16px;">
+          <div class="form-label">Phone Number</div>
+          <input class="form-input" type="tel" id="phone" placeholder="(410) 555-0100" autocomplete="tel">
+        </div>
+        <button class="cta-btn" onclick="submitLead()">
+          Text Me My Quote <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
+        </button>
+        <div class="form-disclaimer">BathPal is free for homeowners. No spam, ever.</div>
+      </div>
+
+      <button class="btn-back" onclick="goStep(5)" style="margin-top:12px;"><svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg> Back</button>
+    </div>
+
+    <!-- RESULT: Estimate revealed after lead capture -->
     <div class="step" id="s-result">
       <div id="result-header-wrap" style="margin: -28px -22px 0; background:#1a2e44; padding:32px 22px 28px; text-align:center; animation: fadeUp 0.4s ease both;">
         <div class="result-label">Your Estimate</div>
@@ -441,48 +472,15 @@ src="https://www.facebook.com/tr?id=915882994184057&ev=PageView&noscript=1"
         <div class="result-subline">Based on your project details</div>
       </div>
 
-      <div style="margin-top: 20px;">
-        <p style="font-size:14px; color:#5a7080; line-height:1.65; margin-bottom:16px;">
-          This is the typical range for your project type in Maryland.
-          Actual quotes will vary based on your specific bathroom and contractor.
-        </p>
-
-        <!-- Lead Capture Box -->
-        <div class="result-cta-box" id="lead-form-box">
-          <div class="result-cta-label">Free &middot; No obligation</div>
-          <div class="result-cta-title">Want quotes from local contractors?</div>
-          <div class="result-cta-sub">We&rsquo;ll match you with 2&ndash;3 licensed Maryland contractors who can beat this estimate.</div>
-
-          <div class="scarcity-row">
-            <div class="scarcity-dot"></div>
-            <div class="scarcity-text">Only 3 contractor spots left this week in Maryland</div>
-          </div>
-
-          <div class="form-field">
-            <div class="form-label">First Name</div>
-            <input class="form-input" type="text" id="fname" placeholder="First name" autocomplete="given-name">
-          </div>
-          <div class="form-field" style="margin-bottom:16px;">
-            <div class="form-label">Phone Number</div>
-            <input class="form-input" type="tel" id="phone" placeholder="(410) 555-0100" autocomplete="tel">
-          </div>
-          <button class="cta-btn" onclick="submitLead()">
-            Get My Free Quotes <svg viewBox="0 0 16 16"><polyline points="6,3 11,8 6,13"/></svg>
-          </button>
-          <div class="form-disclaimer">BathPal is free for homeowners. Contractors pay us — not you. No spam, ever.</div>
+      <div style="margin-top: 24px; text-align:center;">
+        <div class="thankyou-icon">
+          <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
         </div>
-
-        <!-- Thank you state (shown after submit) -->
-        <div class="thankyou-wrap" id="thankyou-box" style="display:none;">
-          <div class="thankyou-icon">
-            <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg>
-          </div>
-          <div class="thankyou-title">You&rsquo;re all set!</div>
-          <div class="thankyou-sub">We&rsquo;re matching you with licensed Maryland contractors. Expect a call within 24 hours to confirm your project details.</div>
-        </div>
-
-        <button class="recalc-btn" onclick="reset()">Start over / recalculate</button>
+        <div class="thankyou-title" style="margin-bottom:8px;">Quote sent!</div>
+        <div class="thankyou-sub">We texted your estimate and we&rsquo;re matching you with licensed Maryland contractors. Expect a call within 24 hours.</div>
       </div>
+
+      <button class="recalc-btn" onclick="reset()">Start over / recalculate</button>
     </div>
 
   </div><!-- step-body -->
@@ -569,7 +567,7 @@ const feedback = {
 
 // 5 real steps + result = 6 screens total
 const progPct = {
-  s1:10, s2:30, s3:50, s4:70, s5:88, 's-result':100, 's-renter':10
+  s1:10, s2:30, s3:50, s4:70, s5:88, 's-lead':95, 's-result':100, 's-renter':10
 };
 
 function showOnly(id) {
@@ -613,7 +611,7 @@ function pick(el) {
       if (state.own === 'notown') { showOnly('s-renter'); return; }
       goStep(2); return;
     }
-    if (s === '5') { showResult(); return; }
+    if (s === '5') { showLeadCapture(); return; }
     const next = parseInt(s) + 1;
     goStep(next);
   }, 420);
@@ -634,7 +632,8 @@ async function sendToGHL(data) {
   }
 }
 
-function showResult() {
+function showLeadCapture() {
+  // Pre-calculate estimate so it's ready to reveal after submit
   const b  = baseC[state.size];
   const sm = scopeM[state.scope];
   const fm = finishM[state.finish];
@@ -644,11 +643,12 @@ function showResult() {
   const hi = Math.min(40000, Math.max(lo + 4000, rawHi));
   state.estimateLo = lo;
   state.estimateHi = hi;
+  showOnly('s-lead');
+}
+
+function showResult() {
   const fmt = n => '$' + n.toLocaleString();
-  document.getElementById('result-range').textContent = fmt(lo) + ' – ' + fmt(hi);
-  // Reset lead form state
-  document.getElementById('lead-form-box').style.display = '';
-  document.getElementById('thankyou-box').style.display = 'none';
+  document.getElementById('result-range').textContent = fmt(state.estimateLo) + ' – ' + fmt(state.estimateHi);
   showOnly('s-result');
 }
 
@@ -680,20 +680,17 @@ function submitLead() {
     page_url:       window.location.href
   });
 
-  // Show thank you inline
-  document.getElementById('lead-form-box').style.display = 'none';
-  const tyBox = document.getElementById('thankyou-box');
-  tyBox.style.display = 'block';
+  // Reveal estimate
+  showResult();
 }
 
 function reset() {
   Object.keys(state).forEach(k => state[k] = null);
   document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
   document.querySelectorAll('.micro-feedback').forEach(f => { f.textContent=''; f.classList.remove('show'); });
-  document.getElementById('next-0').disabled = true;
   document.getElementById('fname').value = '';
   document.getElementById('phone').value = '';
-  showOnly('s0');
+  showOnly('s1');
 }
 </script>
 </body>
